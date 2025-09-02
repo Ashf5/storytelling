@@ -1,0 +1,15 @@
+# ────────────────
+# Node dependencies (ignore everywhere)
+**/node_modules/
+
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ────────────────
+# Environment variables (ignore ALL .env files everywhere)
+**/.env
+**/.env.*
+!**/.env.example   # allow template/example if you want to share structure
+
