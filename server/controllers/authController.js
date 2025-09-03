@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-import { getPasswordDB, registerDB } from "../models/authModel.js";
+import { getPasswordAndIdDB, registerDB } from "../models/authModel.js";
 
 dotenv.config();
 const jsonSecret =  process.env.JSON_SECRET;
@@ -40,12 +40,12 @@ export async function login(req, res) {
     }
 
     // Check password 
-    const hashedPassword = await getPasswordDB(email);
-    if (!hashedPassword) {
+    const passwordAndId = await getPasswordAndIdDB(email);
+    if (!passwordAndId) {
         return res.status(404).json({msg: 'Email not found'});
     }
 
-    const isMatch = await bcrypt.compare(password, hashedPassword.password_hash);
+    const isMatch = await bcrypt.compare(password, passwordAndId.password_hash);
 
     if (!isMatch) {
         return res.status(401).json({msg: 'Incorrect password'});
@@ -53,11 +53,11 @@ export async function login(req, res) {
 
     // Generate the tokens 
 
-    const accessToken = jwt.sign({email: email},jsonSecret, {
+    const accessToken = jwt.sign({email: email, userId: passwordAndId.id},jsonSecret, {
         expiresIn: "15m"
     });
 
-    const refreshToken = jwt.sign({ email: email},jsonSecret, {
+    const refreshToken = jwt.sign({ email: email, userId: passwordAndId.id},jsonSecret, {
         expiresIn: "7d"
     })
 
@@ -76,7 +76,7 @@ export async function refresh(req, res) {
     jwt.verify(refreshToken, jsonSecret, (err, user) => {
         if (err) return res.status(403).json({msg: 'invalid refresh token'});
 
-        const accessToken = jwt.sign({email: user.email},jsonSecret, {
+        const accessToken = jwt.sign({email: user.email, userId:user.userId},jsonSecret, {
             expiresIn: "15m"
         });
 

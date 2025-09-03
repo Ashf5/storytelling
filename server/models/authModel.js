@@ -9,8 +9,8 @@ export async function registerDB(username, email, password_hash) {
 }
 
 
-export async function getPasswordDB(email) {
-    let password = await db('users').select('password_hash').where({email: email}).first();
-    return password
+export async function getPasswordAndIdDB(email) {
+    let passwordId = await db('users').select(['password_hash', 'id']).where({email: email}).first();
+    return passwordId
 }
 
