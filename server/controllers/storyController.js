@@ -1,5 +1,5 @@
 
-import { getStoriesDB } from "../models/storyModel.js";
+import { getStoriesDB, createStoryDB, deleteStoryDB } from "../models/storyModel.js";
 
 
 // Note: This function is supposed to be protected by the auth middleware, so there isn't any jwt check.
@@ -23,5 +23,45 @@ export async function getAuthorsStories(req, res) {
     }
     catch(e) {
         return res.status(500).json({msg: 'Error fetching stories. Please try again later'});
+    }
+}
+
+
+// This function should be protected by the auth middleware, and therefore should have a user.userId
+export async function createStory(req, res) {
+    const {title, content} = req.body;
+    if (!title || !content) {
+        return res.status(400).json({msg: 'Missing paramaters in body. Needs a title and a content'})
+    }
+
+    try {
+        const titleCreated = await createStoryDB(title, content, req.user.userId);
+        return res.status(201).json({msg: `Created: ${titleCreated[0].title}`})
+    }
+    catch(e) {
+        return res.status(500).json({msg: 'something went wrong creating the new book'});
+    }
+}
+
+
+export async function deleteStory(req, res) {
+    const storyId = Number(req.params.id);
+    if(!storyId) {
+        return res.status(400).json({msg: 'invalid id provided'});
+    }
+
+    try {
+        const deleted = await deleteStoryDB(storyId, req.user.userId);
+        return res.status(200).json({msg: `Deleted : ${deleted[0].title}`})
+    }catch(e) {
+        if (e.code === 404) {
+            return res.status(404).json({msg: 'Story not found'});
+        }
+        else if (e.code === 403) {
+            return res.status(403).json({msg: 'Only the author may delete this story'});
+        }
+        else {
+            return res.status(500).json({msg: 'something went wrong while deleting, try again later'})
+        }
     }
 }

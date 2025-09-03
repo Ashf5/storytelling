@@ -14,3 +14,28 @@ export async function getStoriesDB(authorId=null) {
     
     return data;
 }
+
+export async function createStoryDB(title, content, author_id) {
+    const data = await db('stories').insert({'title':title, 'content': content, 'author_id': author_id},["title"]);
+    return data;
+}
+
+
+// This function deletes a story, it only deletes if authorId is the author of the book, if it doesn't delete anything it throws an error
+export async function deleteStoryDB(storyId, authorId) {
+    const storyDeleted = await db('stories').where({'id' : storyId, 'author_id': authorId}).del(['title']);
+    // Check if wasn't found, if not check if it's the right author. Throw an error
+    if (storyDeleted.length === 0) {
+        // check if author and book exist, see why failed
+        const author = await db('stories').select('author_id').where({'id': storyId}).first();
+        if (!author) {
+            const err = new Error('Story not found');
+            err.code = 404;
+            throw err;
+        }
+        const err = new Error('Incorrect author, not authorized');
+        err.code = 403;
+        throw err;
+    }
+    return storyDeleted;
+}
