@@ -1,6 +1,9 @@
 
-import { getStoriesDB, createStoryDB, deleteStoryDB } from "../models/storyModel.js";
+import { isCollaboratorDB } from "../models/contributorModel.js";
+import { getStoriesDB, createStoryDB, deleteStoryDB, updateStoryDB } from "../models/storyModel.js";
 
+
+// TODO test the update on collaborators and write more comments and docs
 
 // Note: This function is supposed to be protected by the auth middleware, so there isn't any jwt check.
 // Returns all the stories
@@ -64,4 +67,50 @@ export async function deleteStory(req, res) {
             return res.status(500).json({msg: 'something went wrong while deleting, try again later'})
         }
     }
+}
+
+
+export async function updateStory(req, res) {
+    const id = Number(req.params.id);
+    if (!id) {
+        return res.status(400).json({msg: 'invalid id provided.'})
+    }
+    // create the object to update, only accept updates to title or content.
+    const updatedObj = {};
+    const {title, content} = req.body;
+    if (!title && !content) {
+        return res.status(400).json({msg: 'mandatory: either title or content field to update'});
+    }
+    if(title) updatedObj['title'] = title;
+    if(content) updatedObj['content'] = content;
+
+    // check if author or contributor.
+    try {
+        let isAuthorizedUpdate = await isCollaboratorDB(id, req.user.userId)
+        if (!isAuthorizedUpdate) {
+            let err = new Error();
+            err.code = 403;
+            throw err;
+        }
+    }
+    catch(e) {
+        if (e.code === 403) {
+            return res.status(403).json({msg: 'You do not have permission to update this story.'})
+        }else if (e.code === 404) {
+            return res.status(404).json({msg: 'This story doesn\'t exist'})
+        }
+        return res.status(500).json({msg: 'An error occured while verifying permissions.'})
+    }
+
+    try {
+        const updated = await updateStoryDB(id, updatedObj);
+        if (updated) {
+            return res.status(201).json({msg: `Updated at ${updated[0].updated_at}`})
+        }
+        throw new Error('Something went wrong while updating')
+    }
+    catch(e) {
+        return res.status(500).json({msg: 'an error occured while updating story. Try again later'})
+    }
+    
 }

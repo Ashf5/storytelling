@@ -2,7 +2,8 @@
 import { Router } from "express";
 import { login, refresh, register } from "../controllers/authController.js";
 import { authenticateToken } from "../middleware/verifyToken.js";
-import { createStory, deleteStory, getAuthorsStories, getStories } from "../controllers/storyController.js";
+import { createStory, deleteStory, getAuthorsStories, getStories, updateStory } from "../controllers/storyController.js";
+import { addContributor, deleteContributor, getContributors } from "../controllers/contributorController.js";
 
 export const router = Router();
 
@@ -15,10 +16,11 @@ router.post('/refresh', refresh);
 router.get('/stories', authenticateToken, getStories);
 router.get('/stories/me', authenticateToken, getAuthorsStories);
 router.post('/stories', authenticateToken, createStory);
-
-// TODO create the patch route, first must take care of contributors
+router.patch('/stories/:id', authenticateToken, updateStory);
 router.delete('/stories/:id', authenticateToken, deleteStory);
 
+// contributor endpoints
+router.post('/contributors', authenticateToken, addContributor); 
+router.get('/contributors/:story_id', authenticateToken, getContributors);
+router.delete('/contributors/:id', authenticateToken, deleteContributor);
 
-// test endpoints
-router.get('/', authenticateToken, (req, res) => res.json({msg: 'authorized'}))

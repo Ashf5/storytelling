@@ -39,3 +39,17 @@ export async function deleteStoryDB(storyId, authorId) {
     }
     return storyDeleted;
 }
+
+
+// takes a story id and returns the author id or undefined if story not found
+export async function getAuthorIdDB(storyId) {
+    let authorId = await db('stories').first(['author_id']).where({'id': storyId});
+    return authorId?.author_id;
+}
+
+
+// updates the story, takes a story id and objects with fields to update. Automatically set the updated_at field to now.
+export async function updateStoryDB(storyId, updatedObj) {
+    const updated = await db('stories').where({'id':storyId}).update({...updatedObj, 'updated_at': db.fn.now()}, ['updated_at']);
+    return updated;
+}
