@@ -1,12 +1,14 @@
 
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../features/store";
-import { createToken } from "../features/userSlice";
+import { registerUser } from "../features/userSlice";
 
 const RegisterForm = () => {
 
-    const dispatch = useAppDispatch();    
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();    
 
-    const handleRegister = (e:React.FormEvent<HTMLFormElement> ) => {
+     const handleRegister = async (e:React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const username = formData.get('username') as string;
@@ -14,7 +16,11 @@ const RegisterForm = () => {
         const password = formData.get('password') as string;
 
 
-        dispatch(createToken({username, email, password}))
+        await dispatch(registerUser({username, email, password}))
+        // after registering, redirect to the homepage
+        navigate('/');
+
+
 
 
     }
