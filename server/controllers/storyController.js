@@ -3,9 +3,7 @@ import { isCollaboratorDB } from "../models/contributorModel.js";
 import { getStoriesDB, createStoryDB, deleteStoryDB, updateStoryDB } from "../models/storyModel.js";
 
 
-// TODO test the update on collaborators and write more comments and docs
-
-// Note: This function is supposed to be protected by the auth middleware, so there isn't any jwt check.
+// Note: These functions are supposed to be protected by the auth middleware, so there isn't any jwt check.
 // Returns all the stories
 export async function getStories(req, res) {
     try {

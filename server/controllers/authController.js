@@ -22,9 +22,12 @@ export async function register(req, res) {
     try {
         let user = await registerDB(username, email, password_hash);
         if (!user) throw new Error('An error occured');
-        return res.status(201).json({msg: 'success', user});
+        const {accessToken, refreshToken} = createTokenAndRefresh(email, user.id);
+        res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true});
+        return res.status(201).json({msg: 'success', accessToken});
     } 
     catch (e) {
+        console.log(e)
         if (e.code === '23505') {
             return res.status(400).json({msg: 'This email is already registered'});
         }
@@ -52,14 +55,8 @@ export async function login(req, res) {
     }
 
     // Generate the tokens 
+    const {accessToken, refreshToken} = createTokenAndRefresh(email, passwordAndId.id)
 
-    const accessToken = jwt.sign({email: email, userId: passwordAndId.id},jsonSecret, {
-        expiresIn: "15m"
-    });
-
-    const refreshToken = jwt.sign({ email: email, userId: passwordAndId.id},jsonSecret, {
-        expiresIn: "7d"
-    })
 
     // Set cookie with refresh token and return the access token
     res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true});
@@ -83,4 +80,17 @@ export async function refresh(req, res) {
         return res.status(201).json({accessToken});
 
     })
+}
+
+function createTokenAndRefresh(email, userId) {
+    // Generate the tokens 
+
+    const accessToken = jwt.sign({email: email, userId: userId},jsonSecret, {
+        expiresIn: "15m"
+    });
+
+    const refreshToken = jwt.sign({ email: email, userId: userId},jsonSecret, {
+        expiresIn: "7d"
+    })
+    return {accessToken, refreshToken};
 }
