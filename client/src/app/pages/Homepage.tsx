@@ -1,5 +1,6 @@
 
 
+import StoryList from "../components/StoryList";
 import { useAppSelector } from "../features/store";
 
 
@@ -10,7 +11,7 @@ const Homepage: React.FC = () => {
     return (
         <div>
             <h3>Stories</h3>
-            <p>{token ?? 'no token'}</p>
+            <StoryList />
         </div>
     )
 }
