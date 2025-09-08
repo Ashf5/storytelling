@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../features/store";
-import { getBooksThunk } from "../features/storySlice";
+import { getStoriesThunk } from "../features/storySlice";
 import StoryCard from "./StoryCard";
 
 const StoryList: React.FC = () => {
@@ -8,7 +8,7 @@ const StoryList: React.FC = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(getBooksThunk());
+        dispatch(getStoriesThunk());
     }, [])
 
 

@@ -5,6 +5,7 @@ import Homepage from './app/pages/homepage';
 import RegisterPage from './app/pages/RegisterPage';
 import Login from './app/pages/Login';
 import EditStory from './app/pages/EditStory';
+import CreateStoryPage from './app/pages/CreateStoryPage';
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/login' element={<Login />} />
 
+        <Route path='/stories' element={<CreateStoryPage />} />
         <Route path='/stories/:id' element={<EditStory />} />
       </Routes>
     </BrowserRouter>

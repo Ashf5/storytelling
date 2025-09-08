@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../features/store";
 import type { FormEvent } from "react";
-import { editBookThunk } from "../features/storySlice";
+import { editStoryThunk } from "../features/storySlice";
 
 const EditStory: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -20,7 +20,7 @@ const EditStory: React.FC = () => {
         const title = formData.get('title') as string;
         const content = formData.get('content') as string;
 
-        await dispatch(editBookThunk({id:numId, title, content}));
+        await dispatch(editStoryThunk({id:numId, title, content}));
 
         navigate('/');
 
