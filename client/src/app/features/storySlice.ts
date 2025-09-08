@@ -14,8 +14,13 @@ const storySlice = createSlice({
 
     },
     extraReducers: (builder) => {
+        //TODO add other stages
+        // TODO add checks to make sure that response was ok
         builder.addCase(getBooksThunk.fulfilled, (state, action) => {
             state.stories = action.payload;
+        })
+        .addCase(editBookThunk.fulfilled, () => {
+            alert('successful!')
         })
     }
 })
@@ -38,6 +43,24 @@ export const getBooksThunk = createAsyncThunk(
         const data = await response.json();
         console.log(data);
         return data;
+    }
+)
+
+// thunk for editing book
+export const editBookThunk = createAsyncThunk<{msg:string}, {id: number | string, title:string, content:string}>(
+    'stories/editBook',
+    async (edited, {getState}) => {
+        const state = getState() as RootState;
+        const accessToken = state.user.accessToken;
+        if (!accessToken) throw new Error('missing access token');
+        await fetch(`${baseURL}/stories/${edited.id}`, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json', 'authorization': accessToken},
+            body: JSON.stringify(edited),
+            credentials: 'include'
+        })
+
+        return {msg: 'success'}
     }
 )
 
