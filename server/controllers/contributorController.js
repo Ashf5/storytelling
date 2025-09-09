@@ -10,8 +10,9 @@ export async function addContributor(req, res) {
     }
 
     const data = await getIdDB(email);
-    const collabId = data[0].id;
     console.log(collabId);
+    const collabId = data[0].id;
+    
 
     let authorId;
     try {
