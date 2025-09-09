@@ -9,7 +9,9 @@ export async function addContributor(req, res) {
         return res.status(400).json({msg: 'missing mandatory params, email and story_id'});
     }
 
-    const collabId = await getIdDB(email).id;
+    const data = await getIdDB(email);
+    const collabId = data[0].id;
+    console.log(collabId);
 
     let authorId;
     try {
