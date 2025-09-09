@@ -59,5 +59,9 @@ export async function updateStoryDB(storyId, updatedObj) {
 export async function getAuthoredAndContribDB(userId) {
     const contributed = await db('contributors').select('story_id').where({'user_id': userId});
     const authored = await db('stories').select('id').where({'author_id': userId});
-    return {contributed, authored};
+
+    // return in an object each with a list of id's
+    const authoredIds = authored.map(item => item.id);
+    const contribIds = contributed.map(item => item.id)
+    return {contributed: contribIds, authored: authoredIds};
 }
