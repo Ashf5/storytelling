@@ -1,13 +1,15 @@
 
 export interface userState {
     accessToken: string | null;
+    authored: number[];
+    contributed: number[]
 }
 
 export interface Story {
-    id?: number;
+    id: number;
     title: string;
     content: string;
-    authorId: BigInteger;
-    createdAt?: string;
-    updatedAt?:string;
+    author_id: BigInteger;
+    created_at?: string;
+    updated_at?:string;
 }

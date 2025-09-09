@@ -1,42 +1,39 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../features/store";
-import type { FormEvent } from "react";
-import { editStoryThunk } from "../features/storySlice";
+import Editable from "../components/EditComponents/Editable";
+import ViewOnly from "../components/EditComponents/ViewOnly";
+import AuthorEdit from "../components/EditComponents/AuthorEdit";
 
+
+
+// Returns the edit page
 const EditStory: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    // get stories that authored or a contributor.
+    const authored = useAppSelector(state => state.user.authored);
+    const contributed = useAppSelector(state => state.user.contributed);
 
     // get id paramater
     const {id} = useParams<{id:string}>();
     const numId = Number(id);
     if (!numId) throw new Error('invalid id provided')
 
-    const story = useAppSelector((state) => state.stories.stories.find(item => item.id === numId));
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const title = formData.get('title') as string;
-        const content = formData.get('content') as string;
-
-        await dispatch(editStoryThunk({id:numId, title, content}));
-
-        navigate('/');
-
-    }
-
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor='title'>Title: </label>
-                <input type="text" name="title" defaultValue={story?.title} />
-                <br />
-                <label htmlFor="content">Content: </label>
-                <textarea name="content" defaultValue={story?.content} />
-                <input type="submit" value="save changes" />
-            </form>
-        </div>
+        // Return appropriate component based on role
+        <>
+        {
+            authored.includes(numId) && <AuthorEdit numId={numId} />
+        }
+        {
+            contributed.includes(numId) && <Editable numId={numId} /> 
+        }
+        {
+            !contributed.includes(numId) && !authored.includes(numId) && <ViewOnly numId={numId} />
+        }
+        
+        </>
+        
     )
 }
 

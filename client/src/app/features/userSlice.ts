@@ -6,7 +6,7 @@ import type { RootState } from "./store.ts";
 const baseURL = import.meta.env.VITE_BASE_URL;
 
 
-const initialState: userState = {accessToken: null, userStories: []};
+const initialState: userState = {accessToken: null, authored: [], contributed: []};
 
 const userSlice = createSlice({
     name: 'user',
@@ -23,6 +23,10 @@ const userSlice = createSlice({
         })
         .addCase(loginUser.fulfilled, (state, action) => {
             state.accessToken = action.payload.accessToken;
+        })
+        .addCase(getUserStoriesThunk.fulfilled, (state, action) => {
+            state.authored = action.payload.authored;
+            state.contributed = action.payload.contributed;
         })
     
     }
@@ -74,13 +78,26 @@ export const loginUser = createAsyncThunk<{accessToken:string}, {email:string, p
     }
 )
 
-export const getUserStories = createAsyncThunk(
+
+// update state with the contributed and authored id's
+export const getUserStoriesThunk = createAsyncThunk(
     // TODO finish the updating of getting the user stories
     'user/userStories',
     async (_, {getState}) => {
         const state = getState() as RootState;
         const accessToken = state.user.accessToken;
-        const response = await fetch(baseURL + '/stories/me')
+        const response = await fetch(baseURL + '/stories/permission', {
+            method: 'GET', 
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': accessToken ?? ''
+            },
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const data = await response.json()
+            return data;
+        }
     }
 )
 

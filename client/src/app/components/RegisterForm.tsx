@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../features/store";
-import { registerUser } from "../features/userSlice";
+import { getUserStoriesThunk, registerUser } from "../features/userSlice";
 
 const RegisterForm = () => {
 
@@ -17,6 +17,7 @@ const RegisterForm = () => {
 
 
         await dispatch(registerUser({username, email, password}))
+        await dispatch(getUserStoriesThunk());
         // after registering, redirect to the homepage
         navigate('/');
 

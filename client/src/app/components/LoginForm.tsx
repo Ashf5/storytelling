@@ -1,7 +1,7 @@
-import type { FormEvent } from "react";
+
 import { useAppDispatch } from "../features/store";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../features/userSlice";
+import { getUserStoriesThunk, loginUser } from "../features/userSlice";
 
 const LoginForm: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -15,6 +15,7 @@ const LoginForm: React.FC = () => {
         
         
         await dispatch(loginUser({email, password}));
+        await dispatch(getUserStoriesThunk());
         // after registering, redirect to the homepage
         navigate('/');
     }
