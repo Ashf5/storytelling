@@ -10,8 +10,7 @@ export async function addContributor(req, res) {
     }
 
     const data = await getIdDB(email);
-    console.log(data);
-    const collabId = data[0].id;
+    const collabId = data.id;
     
 
     let authorId;
@@ -42,7 +41,7 @@ export async function addContributor(req, res) {
             e.code = '23503';
             throw e;
         } 
-        await addContributorDB(collabId, user_id);
+        await addContributorDB(story_id, collabId);
         return res.status(201).json({msg: 'Contributor added'});
     }
     catch(e) {
