@@ -53,3 +53,11 @@ export async function updateStoryDB(storyId, updatedObj) {
     const updated = await db('stories').where({'id':storyId}).update({...updatedObj, 'updated_at': db.fn.now()}, ['updated_at']);
     return updated;
 }
+
+
+// gets all the id's of stories where person is author or contributon, returns in an object.
+export async function getAuthoredAndContribDB(userId) {
+    const contributed = await db('contributors').select('story_id').where({'user_id': userId});
+    const authored = await db('stories').select('id').where({'author_id': userId});
+    return {contributed, authored};
+}

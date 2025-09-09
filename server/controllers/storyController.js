@@ -1,6 +1,6 @@
 
 import { isCollaboratorDB } from "../models/contributorModel.js";
-import { getStoriesDB, createStoryDB, deleteStoryDB, updateStoryDB } from "../models/storyModel.js";
+import { getStoriesDB, createStoryDB, deleteStoryDB, updateStoryDB, getAuthoredAndContribDB } from "../models/storyModel.js";
 
 
 // Note: These functions are supposed to be protected by the auth middleware, so there isn't any jwt check.
@@ -111,4 +111,16 @@ export async function updateStory(req, res) {
         return res.status(500).json({msg: 'an error occured while updating story. Try again later'})
     }
     
+}
+
+
+// gets all id's of stories where given id is author or contributed.
+export async function getAuthoredAndContrib(req, res) {
+    try {
+        const data = await getAuthoredAndContribDB(req.user.userId);
+        return res.status(200).json(data);
+    }
+    catch(e) {
+        return res.status(500).json({msg: 'error occured while fetching data on authored stories.'});
+    }
 }

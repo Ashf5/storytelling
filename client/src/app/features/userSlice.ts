@@ -1,11 +1,12 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type {userState} from '../../../../types/types.ts'
+import type { RootState } from "./store.ts";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
 
-const initialState: userState = {accessToken: null};
+const initialState: userState = {accessToken: null, userStories: []};
 
 const userSlice = createSlice({
     name: 'user',
@@ -70,6 +71,16 @@ export const loginUser = createAsyncThunk<{accessToken:string}, {email:string, p
         });
         const data = await response.json();
         return data;
+    }
+)
+
+export const getUserStories = createAsyncThunk(
+    // TODO finish the updating of getting the user stories
+    'user/userStories',
+    async (_, {getState}) => {
+        const state = getState() as RootState;
+        const accessToken = state.user.accessToken;
+        const response = await fetch(baseURL + '/stories/me')
     }
 )
 
