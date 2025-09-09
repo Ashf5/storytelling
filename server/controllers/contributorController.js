@@ -1,12 +1,15 @@
+import { getIdDB } from "../models/authModel.js";
 import { addContributorDB, deleteContributorDB, getAuthorIdFromContributor, getContributorsDB } from "../models/contributorModel.js";
 import { getAuthorIdDB } from "../models/storyModel.js";
 
 
 export async function addContributor(req, res) {
-    let {user_id, story_id} = req.body;
-    if (!user_id || !story_id) {
-        return res.status(400).json({msg: 'missing mandatory params, user_id and story_id'});
+    let {email, story_id} = req.body;
+    if (!email || !story_id) {
+        return res.status(400).json({msg: 'missing mandatory params, email and story_id'});
     }
+
+    const collabId = await getIdDB(email).id;
 
     let authorId;
     try {
@@ -31,7 +34,12 @@ export async function addContributor(req, res) {
     }
 
     try {
-        await addContributorDB(story_id, user_id);
+        if (!collabId) {
+            let e = new Error()
+            e.code = '23503';
+            throw e;
+        } 
+        await addContributorDB(collabId, user_id);
         return res.status(201).json({msg: 'Contributor added'});
     }
     catch(e) {

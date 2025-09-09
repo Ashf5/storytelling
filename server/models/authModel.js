@@ -14,3 +14,7 @@ export async function getPasswordAndIdDB(email) {
     return passwordId
 }
 
+export async function getIdDB(email) {
+    let id = await db('users').select('id').where({email: email}).first();
+    return id;
+}
