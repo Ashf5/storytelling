@@ -45,7 +45,6 @@ export async function addContributor(req, res) {
         return res.status(201).json({msg: 'Contributor added'});
     }
     catch(e) {
-        console.log(e);
         if (e.code === '23503') {
             return res.status(404).json({msg: "this user doesn't exist"});
         }

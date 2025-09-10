@@ -22,13 +22,11 @@ export async function register(req, res) {
     try {
         let user = await registerDB(username, email, password_hash);
         if (!user) throw new Error('An error occured');
-        console.log(user)
         const {accessToken, refreshToken} = createTokenAndRefresh(email, user[0].id);
         res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true});
         return res.status(201).json({msg: 'success', accessToken});
     } 
     catch (e) {
-        console.log(e)
         if (e.code === '23505') {
             return res.status(400).json({msg: 'This email is already registered'});
         }
