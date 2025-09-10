@@ -62,6 +62,6 @@ export async function getAuthoredAndContribDB(userId) {
 
     // return in an object each with a list of id's
     const authoredIds = authored.map(item => item.id);
-    const contribIds = contributed.map(item => item.id)
+    const contribIds = contributed.map(item => item.story_id)
     return {contributed: contribIds, authored: authoredIds};
 }
