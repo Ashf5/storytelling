@@ -35,7 +35,7 @@ const userSlice = createSlice({
 
 
 // A thunk for refreshing token
-const refreshToken = createAsyncThunk(
+export const refreshToken = createAsyncThunk(
     'user/refreshToken',
     async () => {
         const response = await fetch(baseURL + '/refresh', {
