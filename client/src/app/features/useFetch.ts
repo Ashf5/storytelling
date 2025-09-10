@@ -1,5 +1,5 @@
-import type { ThunkDispatch } from "@reduxjs/toolkit";
-import { useAppSelector, useAppDispatch, type AppDispatch } from "./store";
+
+import {type AppDispatch } from "./store";
 import { refreshToken } from "./userSlice";
 
 type fetchArgs = {
@@ -10,7 +10,7 @@ type fetchArgs = {
 }
 
 
-
+// TODO change to regular function. Can't use out of component.
 // hook to use fetch that will automatically try to refresh
 export const useFetch = async (dispatch:AppDispatch, {url, method, body, accessToken}:fetchArgs) => {
     let response: Response;

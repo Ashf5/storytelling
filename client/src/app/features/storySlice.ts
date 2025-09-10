@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { Story } from "../../../../types/types";
-import type {RootState} from './store.ts';
+import type {AppDispatch, RootState} from './store.ts';
+import { useFetch } from "./useFetch.ts";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -44,7 +45,6 @@ export const getStoriesThunk = createAsyncThunk(
             credentials: 'include'
         });
         const data = await response.json();
-        console.log(data);
         return data;
     }
 )

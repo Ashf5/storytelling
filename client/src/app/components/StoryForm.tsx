@@ -2,6 +2,7 @@ import type { FormEvent } from "react"
 import { useAppDispatch } from "../features/store"
 import { useNavigate } from "react-router-dom";
 import { createStoryThunk } from "../features/storySlice";
+import { getUserStoriesThunk } from "../features/userSlice";
 
 const StoryForm: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -14,6 +15,8 @@ const StoryForm: React.FC = () => {
         const content = formData.get('content') as string;
 
         await dispatch(createStoryThunk({title, content}))
+        // update state so that will have newest story
+        await dispatch(getUserStoriesThunk())
         navigate('/');
     }
 
