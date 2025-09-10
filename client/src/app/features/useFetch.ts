@@ -21,6 +21,7 @@ export const useFetch = async (dispatch:AppDispatch, {url, method, body, accessT
                 'Content-Type': 'application/json',
                 'authorization': accessToken || ''
             },
+            credentials: 'include',
             body: body ? body : undefined
         } );
         if (response.status === 403) {
