@@ -1,11 +1,11 @@
 
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Homepage from './app/pages/homepage';
-import RegisterPage from './app/pages/RegisterPage';
-import Login from './app/pages/Login';
-import EditStory from './app/pages/EditStory';
-import CreateStoryPage from './app/pages/CreateStoryPage';
+import Homepage from './app/pages/homepage.tsx';
+import RegisterPage from './app/pages/RegisterPage.tsx';
+import Login from './app/pages/Login.tsx';
+import EditStory from './app/pages/EditStory.tsx';
+import CreateStoryPage from './app/pages/CreateStoryPage.tsx';
 
 function App() {
 

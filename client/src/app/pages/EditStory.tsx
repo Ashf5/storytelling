@@ -1,15 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../features/store";
-import Editable from "../components/EditComponents/Editable";
-import ViewOnly from "../components/EditComponents/ViewOnly";
-import AuthorEdit from "../components/EditComponents/AuthorEdit";
+import { useParams } from "react-router-dom";
+import {  useAppSelector } from "../features/store";
+import Editable from "../components/EditComponents/Editable.tsx";
+import ViewOnly from "../components/EditComponents/ViewOnly.tsx";
+import AuthorEdit from "../components/EditComponents/AuthorEdit.tsx";
 
 
 
 // Returns the edit page
 const EditStory: React.FC = () => {
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     // get stories that authored or a contributor.
     const authored = useAppSelector(state => state.user.authored);
     const contributed = useAppSelector(state => state.user.contributed);
