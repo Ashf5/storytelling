@@ -117,6 +117,7 @@ export async function updateStory(req, res) {
 // gets all id's of stories where given id is author or contributed.
 export async function getAuthoredAndContrib(req, res) {
     try {
+        console.log(req.user)
         const data = await getAuthoredAndContribDB(req.user.userId);
         return res.status(200).json(data);
     }
