@@ -52,3 +52,8 @@ id SERIAL PRIMARY KEY,
 story_id INT REFERENCES Stories(id),
 user_id INT REFERENCES Users(id)
 );
+
+
+## .env files
+Server needs a DATABASE_URL and JSON_SECRET.
+Client needs VITE_BASE_URL which is https://yourdomain/api
