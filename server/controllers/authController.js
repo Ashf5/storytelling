@@ -23,7 +23,7 @@ export async function register(req, res) {
         let user = await registerDB(username, email, password_hash);
         if (!user) throw new Error('An error occured');
         console.log(user)
-        const {accessToken, refreshToken} = createTokenAndRefresh(email, user.id);
+        const {accessToken, refreshToken} = createTokenAndRefresh(email, user[0].id);
         res.cookie("refreshToken", refreshToken, {httpOnly: true, secure: true});
         return res.status(201).json({msg: 'success', accessToken});
     } 
