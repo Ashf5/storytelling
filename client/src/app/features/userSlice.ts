@@ -19,14 +19,14 @@ const userSlice = createSlice({
     // TODO take care of all the stages....
     extraReducers: (builder) => {
         builder.addCase(registerUser.fulfilled, (state, action) => {
-            state.accessToken = action.payload.accessToken
+            state.accessToken = action.payload.accessToken;
         })
         .addCase(loginUser.fulfilled, (state, action) => {
             state.accessToken = action.payload.accessToken;
         })
         .addCase(getUserStoriesThunk.fulfilled, (state, action) => {
-            state.authored = action.payload.authored;
-            state.contributed = action.payload.contributed;
+            state.authored = action.payload?.authored || [];
+            state.contributed = action.payload?.contributed || [];
         })
     
     }

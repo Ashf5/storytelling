@@ -121,6 +121,7 @@ export async function getAuthoredAndContrib(req, res) {
         return res.status(200).json(data);
     }
     catch(e) {
+        console.log(e);
         return res.status(500).json({msg: 'error occured while fetching data on authored stories.'});
     }
 }
